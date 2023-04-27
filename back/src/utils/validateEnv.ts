@@ -10,6 +10,12 @@ function validateEnv(): void {
     MONGO_USER: str(),
     PORT: port({ default: 5000 }),
     JWT_SECRET: str(),
+
+    POSTGRES_NAME: str(),
+    POSTGRES_HOST: str(),
+    POSTGRES_PASSWORD: str(),
+    POSTGRES_DB: str(),
+    POSTGRES_PORT: port({default: 4300})
   });
 }
 

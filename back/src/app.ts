@@ -44,7 +44,13 @@ class App {
   }
 
   private initializeDatabaseConnection(): void {
-    const databaseManager: DataBaseManager = new DataBaseManager('dbName', 'localhost', 'dbPassword', 'postgres', 5438);
+    const databaseManager: DataBaseManager = new DataBaseManager(
+      process.env.POSTGRES_NAME as string,
+      process.env.POSTGRES_HOST as string,
+      process.env.POSTGRES_PASSWORD as string,
+      process.env.POSTGRES_DB as string,
+      Number(process.env.POSTGRES_PORT)
+    );
     // pool.connect().then(client => {
     //   console.log("CONNECTED");
     // })
