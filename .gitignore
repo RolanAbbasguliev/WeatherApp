@@ -17,7 +17,16 @@ yarn-error.log
 /*/node_modules
 /*/node_module
 
-/dockDB/*
+# Docker
+
+/dockDB/postgres-data
+/dockDB/sql
+
+# ENV
+
+/back/.env
+/front/.env
+
 
 # IDEs and editors
 .idea/
@@ -48,3 +57,5 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+
