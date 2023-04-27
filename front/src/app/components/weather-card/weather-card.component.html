@@ -1,0 +1,14 @@
+<div class="weather-card"  >
+  <div class="weather-card__inner">
+    <div class="weather-card__dName">
+      {{ weatherCard.dayDate.toDateString().split(" ")[0] }}
+    </div>
+    <div class="weather-card__dImg">
+      <img src="" alt="" />
+    </div>
+    <div class="weather-card__infoTemp">
+      <div class="weather-card__temp-min">{{ weatherCard.minTemp }}</div>
+      <div class="weather-card__temp-max">{{ weatherCard.maxTemp }}</div>
+    </div>
+  </div>
+</div>

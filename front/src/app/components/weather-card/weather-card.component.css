@@ -1,0 +1,10 @@
+.weather-card__inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: whitesmoke;
+
+  padding: 30px;
+  border-radius: 10px;
+}

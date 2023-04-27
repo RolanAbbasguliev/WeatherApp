@@ -1,0 +1,28 @@
+<div class="weather-hightlights" *ngIf="weatherHightlights">
+  <div class="weather-hightlight__inner">
+    <div class="weather-hightlight__card">
+      <h2 class="weather-hightlight__card-name">UV Index</h2>
+      {{weatherHightlights.uvIndex}}
+    </div>
+    <div class="weather-hightlight__card">
+      <h2 class="weather-hightlight__card-name">Wind Status</h2>
+      {{weatherHightlights.wind_kph}}
+    </div>
+    <!-- <div class="weather-hightlight__card">
+      <h2 class="weather-hightlight__card-name">Sunrise&Sunset</h2>
+      {{weatherHightlights.sunriseTime}}
+    </div> -->
+    <div class="weather-hightlight__card">
+      <h2 class="weather-hightlight__card-name">Humidity</h2>
+      {{weatherHightlights.humidity}}
+    </div>
+    <div class="weather-hightlight__card">
+      <h2 class="weather-hightlight__card-name">Visibilty</h2>
+      {{weatherHightlights.vis_km}}
+    </div>
+    <div class="weather-hightlight__card">
+      <h2 class="weather-hightlight__card-name">Feelslike</h2>
+      {{weatherHightlights.feelslike_c}}
+    </div>
+  </div>
+</div>

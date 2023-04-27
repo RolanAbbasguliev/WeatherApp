@@ -1,0 +1,6 @@
+<section class="weather-daily" *ngIf="weatherInfoDaily">
+  <app-weather-card
+    *ngFor="let card of weatherCards"
+    [weatherCard]="card"
+  ></app-weather-card>
+</section>
