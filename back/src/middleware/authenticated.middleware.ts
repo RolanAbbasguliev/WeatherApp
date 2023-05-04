@@ -1,4 +1,4 @@
-import UserModel from '@/resources/user/user.model';
+import DBManager from '@/utils/database/database';
 import HttpException from '@/utils/exceptions/http.exception';
 import IToken from '@/utils/interfaces/token.interface';
 import { verifyToken } from '@/utils/token';
@@ -13,7 +13,7 @@ async function authenticatedMiddleware(
   const bearer = req.headers.authorization;
 
   if (!bearer || !bearer.startsWith('Bearer')) {
-    return next(new HttpException(401, 'Unuathorised'));
+    return next(new HttpException(401, 'Unauthorised'));
   }
 
   const accessToken = bearer.split('Bearer: ')[0].trim();
@@ -23,22 +23,26 @@ async function authenticatedMiddleware(
       accessToken
     );
 
+    const prisma = DBManager.getPrisma();
+
     if (payload instanceof jwt.JsonWebTokenError) {
-      return next(new HttpException(401, 'Unuathorised'));
+      return next(new HttpException(401, 'Unauthorised'));
     }
-    const user = await UserModel.findById(payload.id)
-      .select('-password')
-      .exec();
+    const user = await prisma.user.findUnique({
+      where: {
+        id: payload.id,
+      },
+    });
 
     if (!user) {
-      return next(new HttpException(401, 'Unuathorised'));
+      return next(new HttpException(401, 'Unauthorised'));
     }
 
     req.user = user;
 
     return next();
   } catch (error) {
-    return next(new HttpException(401, 'Unuathorised'));
+    return next(new HttpException(401, 'Unauthorised'));
   }
 }
 

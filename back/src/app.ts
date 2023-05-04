@@ -1,7 +1,7 @@
 import ErrorMiddleware from '@/middleware/error.middleware';
-import DataBaseManager from '@/utils/database/database';
 import IController from '@/utils/interfaces/controller.interface';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application } from 'express';
 import helmet from 'helmet';
@@ -31,6 +31,7 @@ class App {
     this.express.use(express.json());
     this.express.use(express.urlencoded({ extended: false }));
     this.express.use(compression());
+    this.express.use(cookieParser());
   }
 
   private initializeControllers(controllers: IController[]): void {
@@ -44,18 +45,12 @@ class App {
   }
 
   private initializeDatabaseConnection(): void {
-    const databaseManager: DataBaseManager = new DataBaseManager(
-      process.env.POSTGRES_NAME as string,
-      process.env.POSTGRES_HOST as string,
-      process.env.POSTGRES_PASSWORD as string,
-      process.env.POSTGRES_DB as string,
-      Number(process.env.POSTGRES_PORT)
-    );
+    // const databaseManager: DataBaseManager = new DataBaseManager(
+    // );
     // pool.connect().then(client => {
     //   console.log("CONNECTED");
     // })
     // const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
-
     // mongoose.connect(
     //   `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`
     // );

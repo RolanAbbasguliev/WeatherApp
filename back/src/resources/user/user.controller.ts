@@ -1,4 +1,3 @@
-import authenticated from '@/middleware/authenticated.middleware';
 import validationMiddleware from '@/middleware/validation.middleware';
 import UserService from '@/resources/user/user.service';
 import validate from '@/resources/user/user.validation';
@@ -29,7 +28,7 @@ class UserController implements Controller {
       this.login
     );
 
-    this.router.get(`${this.path}`, authenticated, this.getUser);
+    // this.router.get(`${this.path}`, authenticated, this.getUser);
   }
 
   private register = async (
@@ -46,6 +45,12 @@ class UserController implements Controller {
         password,
         'user'
       );
+      res
+        .cookie('accessToken', token, {
+          maxAge: 432000000,
+          httpOnly: true,
+        })
+        .status(201);
 
       res.status(201).json({ token });
     } catch (error: any) {
@@ -62,24 +67,30 @@ class UserController implements Controller {
       const { email, password } = req.body;
 
       const token = await this.UserService.login(email, password);
+      res
+        .cookie('accessToken', token, {
+          maxAge: 432000000,
+          httpOnly: true,
+        })
+        .status(201);
 
-      res.status(200).json({ token });
+      res.status(201).json({ token });
     } catch (error: any) {
       next(new HttpException(400, error.message));
     }
   };
 
-  private getUser = (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Response | void => {
-    if (!req.user) {
-      return next(new HttpException(404, 'No logged in user'));
-    }
+  // private getUser = (
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction
+  // ): Response | void => {
+  //   if (!req.user) {
+  //     return next(new HttpException(404, 'No logged in user'));
+  //   }
 
-    res.status(200).json({ user: req.user });
-  };
+  //   res.status(200).json({ user: req.user });
+  // };
 }
 
 export default UserController;

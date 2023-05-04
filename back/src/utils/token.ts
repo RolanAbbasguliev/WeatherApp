@@ -3,8 +3,8 @@ import Token from '@/utils/interfaces/token.interface';
 import jwt from 'jsonwebtoken';
 
 export const createToken = (user: User): string => {
-  return jwt.sign({ id: user._id }, process.env.JWT_SECRET as jwt.Secret, {
-    expiresIn: '15min',
+  return jwt.sign({ id: user.id }, process.env.JWT_SECRET as jwt.Secret, {
+    expiresIn: '5d',
   });
 };
 

@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_middleware_1 = __importDefault(require("@/middleware/error.middleware"));
-const database_1 = __importDefault(require("@/utils/database/database"));
 const compression_1 = __importDefault(require("compression"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const helmet_1 = __importDefault(require("helmet"));
@@ -28,6 +28,7 @@ class App {
         this.express.use(express_1.default.json());
         this.express.use(express_1.default.urlencoded({ extended: false }));
         this.express.use((0, compression_1.default)());
+        this.express.use((0, cookie_parser_1.default)());
     }
     initializeControllers(controllers) {
         controllers.forEach((controller) => {
@@ -38,7 +39,8 @@ class App {
         this.express.use(error_middleware_1.default);
     }
     initializeDatabaseConnection() {
-        const databaseManager = new database_1.default('dbName', 'localhost', 'dbPassword', 'postgres', 5438);
+        // const databaseManager: DataBaseManager = new DataBaseManager(
+        // );
         // pool.connect().then(client => {
         //   console.log("CONNECTED");
         // })

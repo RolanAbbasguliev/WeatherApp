@@ -11,6 +11,11 @@ function validateEnv() {
         MONGO_USER: (0, envalid_1.str)(),
         PORT: (0, envalid_1.port)({ default: 5000 }),
         JWT_SECRET: (0, envalid_1.str)(),
+        POSTGRES_NAME: (0, envalid_1.str)(),
+        POSTGRES_HOST: (0, envalid_1.str)(),
+        POSTGRES_PASSWORD: (0, envalid_1.str)(),
+        POSTGRES_DB: (0, envalid_1.str)(),
+        POSTGRES_PORT: (0, envalid_1.port)({ default: 4300 })
     });
 }
 exports.default = validateEnv;

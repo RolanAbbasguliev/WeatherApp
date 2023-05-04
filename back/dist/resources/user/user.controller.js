@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const authenticated_middleware_1 = __importDefault(require("@/middleware/authenticated.middleware"));
 const validation_middleware_1 = __importDefault(require("@/middleware/validation.middleware"));
 const user_service_1 = __importDefault(require("@/resources/user/user.service"));
 const user_validation_1 = __importDefault(require("@/resources/user/user.validation"));
@@ -27,6 +26,12 @@ class UserController {
             try {
                 const { name, email, password } = req.body;
                 const token = yield this.UserService.register(name, email, password, 'user');
+                res
+                    .cookie('accessToken', token, {
+                    maxAge: 432000000,
+                    httpOnly: true,
+                })
+                    .status(201);
                 res.status(201).json({ token });
             }
             catch (error) {
@@ -37,24 +42,24 @@ class UserController {
             try {
                 const { email, password } = req.body;
                 const token = yield this.UserService.login(email, password);
-                res.status(200).json({ token });
+                res
+                    .cookie('accessToken', token, {
+                    maxAge: 432000000,
+                    httpOnly: true,
+                })
+                    .status(201);
+                res.status(201).json({ token });
             }
             catch (error) {
                 next(new http_exception_1.default(400, error.message));
             }
         });
-        this.getUser = (req, res, next) => {
-            if (!req.user) {
-                return next(new http_exception_1.default(404, 'No logged in user'));
-            }
-            res.status(200).json({ user: req.user });
-        };
         this.initialiseRoutes();
     }
     initialiseRoutes() {
         this.router.post(`${this.path}/register`, (0, validation_middleware_1.default)(user_validation_1.default.register), this.register);
         this.router.post(`${this.path}/login`, (0, validation_middleware_1.default)(user_validation_1.default.login), this.login);
-        this.router.get(`${this.path}`, authenticated_middleware_1.default, this.getUser);
+        // this.router.get(`${this.path}`, authenticated, this.getUser);
     }
 }
 exports.default = UserController;

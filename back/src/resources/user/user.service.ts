@@ -1,9 +1,30 @@
-import UserModel from '@/resources/user/user.model';
+import DBManager from '@/utils/database/database';
 import token from '@/utils/token';
+import bcrypt from 'bcrypt';
+import HttpException from '../../utils/exceptions/http.exception';
 
 class UserService {
-  private user = UserModel;
+  private prisma = DBManager.getPrisma();
+  public async isValidPassword(
+    password: string,
+    email: string
+  ): Promise<Error | boolean | undefined> {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+      });
 
+      if (!user) {
+        throw new Error('Unable to find user by email');
+      }
+
+      return await bcrypt.compare(password, user.password);
+    } catch (err: any) {
+      console.log(err);
+    }
+  }
   /**
    * Register a new user
    */
@@ -12,34 +33,54 @@ class UserService {
     email: string,
     password: string,
     role: string
-  ): Promise<Error | string> {
+  ): Promise<Error | string | undefined> {
     try {
-      const user = await this.user.create({ name, email, password, role });
+      const userPassword = await bcrypt.hash(password, 10);
+      const user = await this.prisma.user.create({
+        data: {
+          name: name,
+          email: email,
+          password: userPassword,
+        },
+      });
+
+      if (!user) {
+        throw new Error('Unable to create user');
+      }
       const accessToken = token.createToken(user);
       return accessToken;
-    } catch (error) {
-      throw new Error('Enable to create user');
+    } catch (err: any) {
+      throw new HttpException(400, 'Unable to create user');
     }
   }
 
   /**
    * Login user
    */
-  public async login(email: string, password: string): Promise<Error | string> {
+  public async login(
+    email: string,
+    password: string
+  ): Promise<Error | string | undefined> {
     try {
-      const user = await this.user.findOne({ email });
+      const user = await this.prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+      });
 
       if (!user) {
         throw new Error('Unable to find user with that email address');
       }
 
-      if (await user.isValidPassword(password)) {
+      const res = await this.isValidPassword(password, email);
+
+      if (await this.isValidPassword(password, email)) {
         return token.createToken(user);
       } else {
         throw new Error('Wrong credentials given');
       }
-    } catch (error) {
-      throw new Error('Unable to login user');  
+    } catch (err: any) {
+      throw new HttpException(400, err);
     }
   }
 }
