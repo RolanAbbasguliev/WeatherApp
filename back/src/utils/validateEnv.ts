@@ -15,7 +15,8 @@ function validateEnv(): void {
     POSTGRES_HOST: str(),
     POSTGRES_PASSWORD: str(),
     POSTGRES_DB: str(),
-    POSTGRES_PORT: port({default: 4300})
+    POSTGRES_PORT: port({ default: 4300 }),
+    WEATHER_API_KEY: str(),
   });
 }
 

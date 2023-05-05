@@ -16,6 +16,7 @@ model User {
   name String 
   password String 
   role Role @default(USER)
+  
 }
 
 enum Role {

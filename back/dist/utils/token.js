@@ -24,7 +24,7 @@ const verifyToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => {
         jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET, (err, payload) => {
             if (err)
-                return reject;
+                return reject(err);
             resolve(payload);
         });
     });

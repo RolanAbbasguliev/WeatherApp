@@ -16,7 +16,7 @@ async function authenticatedMiddleware(
     return next(new HttpException(401, 'Unauthorised'));
   }
 
-  const accessToken = bearer.split('Bearer: ')[0].trim();
+  const accessToken = bearer.split(' ')[1].trim();
 
   try {
     const payload: IToken | jwt.JsonWebTokenError = await verifyToken(
@@ -28,6 +28,7 @@ async function authenticatedMiddleware(
     if (payload instanceof jwt.JsonWebTokenError) {
       return next(new HttpException(401, 'Unauthorised'));
     }
+
     const user = await prisma.user.findUnique({
       where: {
         id: payload.id,

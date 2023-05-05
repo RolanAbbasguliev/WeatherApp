@@ -22,7 +22,7 @@ function authenticatedMiddleware(req, res, next) {
         if (!bearer || !bearer.startsWith('Bearer')) {
             return next(new http_exception_1.default(401, 'Unauthorised'));
         }
-        const accessToken = bearer.split('Bearer: ')[0].trim();
+        const accessToken = bearer.split(' ')[1].trim();
         try {
             const payload = yield (0, token_1.verifyToken)(accessToken);
             const prisma = database_1.default.getPrisma();

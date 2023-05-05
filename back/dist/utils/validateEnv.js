@@ -15,7 +15,8 @@ function validateEnv() {
         POSTGRES_HOST: (0, envalid_1.str)(),
         POSTGRES_PASSWORD: (0, envalid_1.str)(),
         POSTGRES_DB: (0, envalid_1.str)(),
-        POSTGRES_PORT: (0, envalid_1.port)({ default: 4300 })
+        POSTGRES_PORT: (0, envalid_1.port)({ default: 4300 }),
+        WEATHER_API_KEY: (0, envalid_1.str)(),
     });
 }
 exports.default = validateEnv;

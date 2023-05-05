@@ -5,10 +5,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application } from 'express';
 import helmet from 'helmet';
-import mongoose from 'mongoose';
 import morgan from 'morgan';
-
-mongoose.set('strictQuery', false);
 
 class App {
   public express: Application;

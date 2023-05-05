@@ -12,23 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const authenticated_middleware_1 = __importDefault(require("@/middleware/authenticated.middleware"));
 const validation_middleware_1 = __importDefault(require("@/middleware/validation.middleware"));
 const user_service_1 = __importDefault(require("@/resources/user/user.service"));
 const user_validation_1 = __importDefault(require("@/resources/user/user.validation"));
 const http_exception_1 = __importDefault(require("@/utils/exceptions/http.exception"));
+const client_1 = require("@prisma/client");
 const express_1 = require("express");
 class UserController {
     constructor() {
         this.path = '/users';
         this.router = (0, express_1.Router)();
         this.UserService = new user_service_1.default();
+        this.findUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                res.status(201).send(req.user);
+            }
+            catch (err) {
+                next(new http_exception_1.default(400, err.message));
+            }
+        });
         this.register = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, email, password } = req.body;
-                const token = yield this.UserService.register(name, email, password, 'user');
+                const token = yield this.UserService.register(name, email, password, client_1.Role.USER);
                 res
                     .cookie('accessToken', token, {
-                    maxAge: 432000000,
+                    maxAge: 1000 * 60 * 60 * 24 * 5,
                     httpOnly: true,
                 })
                     .status(201);
@@ -44,14 +54,14 @@ class UserController {
                 const token = yield this.UserService.login(email, password);
                 res
                     .cookie('accessToken', token, {
-                    maxAge: 432000000,
+                    maxAge: 1000 * 60 * 60 * 24 * 5,
                     httpOnly: true,
                 })
                     .status(201);
                 res.status(201).json({ token });
             }
             catch (error) {
-                next(new http_exception_1.default(400, error.message));
+                next(new http_exception_1.default(400, error));
             }
         });
         this.initialiseRoutes();
@@ -59,7 +69,7 @@ class UserController {
     initialiseRoutes() {
         this.router.post(`${this.path}/register`, (0, validation_middleware_1.default)(user_validation_1.default.register), this.register);
         this.router.post(`${this.path}/login`, (0, validation_middleware_1.default)(user_validation_1.default.login), this.login);
-        // this.router.get(`${this.path}`, authenticated, this.getUser);
+        this.router.get(`${this.path}`, authenticated_middleware_1.default, this.findUser);
     }
 }
 exports.default = UserController;

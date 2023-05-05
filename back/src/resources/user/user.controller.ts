@@ -1,8 +1,10 @@
+import authenticatedMiddleware from '@/middleware/authenticated.middleware';
 import validationMiddleware from '@/middleware/validation.middleware';
 import UserService from '@/resources/user/user.service';
 import validate from '@/resources/user/user.validation';
 import HttpException from '@/utils/exceptions/http.exception';
 import Controller from '@/utils/interfaces/controller.interface';
+import { Role } from '@prisma/client';
 import { NextFunction, Request, Response, Router } from 'express';
 
 class UserController implements Controller {
@@ -28,8 +30,20 @@ class UserController implements Controller {
       this.login
     );
 
-    // this.router.get(`${this.path}`, authenticated, this.getUser);
+    this.router.get(`${this.path}`, authenticatedMiddleware, this.findUser);
   }
+
+  private findUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    try {
+      res.status(201).send(req.user);
+    } catch (err: any) {
+      next(new HttpException(400, err.message));
+    }
+  };
 
   private register = async (
     req: Request,
@@ -43,11 +57,11 @@ class UserController implements Controller {
         name,
         email,
         password,
-        'user'
+        Role.USER
       );
       res
         .cookie('accessToken', token, {
-          maxAge: 432000000,
+          maxAge: 1000 * 60 * 60 * 24 * 5,
           httpOnly: true,
         })
         .status(201);
@@ -69,14 +83,14 @@ class UserController implements Controller {
       const token = await this.UserService.login(email, password);
       res
         .cookie('accessToken', token, {
-          maxAge: 432000000,
+          maxAge: 1000 * 60 * 60 * 24 * 5,
           httpOnly: true,
         })
         .status(201);
 
       res.status(201).json({ token });
     } catch (error: any) {
-      next(new HttpException(400, error.message));
+      next(new HttpException(400, error));
     }
   };
 

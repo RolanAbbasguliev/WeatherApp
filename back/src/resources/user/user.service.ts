@@ -1,4 +1,6 @@
 import DBManager from '@/utils/database/database';
+import { Role } from '@prisma/client';
+
 import token from '@/utils/token';
 import bcrypt from 'bcrypt';
 import HttpException from '../../utils/exceptions/http.exception';
@@ -22,7 +24,7 @@ class UserService {
 
       return await bcrypt.compare(password, user.password);
     } catch (err: any) {
-      console.log(err);
+      throw new HttpException(400, err);
     }
   }
   /**
@@ -32,7 +34,7 @@ class UserService {
     name: string,
     email: string,
     password: string,
-    role: string
+    role: Role
   ): Promise<Error | string | undefined> {
     try {
       const userPassword = await bcrypt.hash(password, 10);
@@ -41,8 +43,11 @@ class UserService {
           name: name,
           email: email,
           password: userPassword,
+          role: role,
         },
       });
+
+      console.log('4444');
 
       if (!user) {
         throw new Error('Unable to create user');
@@ -80,7 +85,7 @@ class UserService {
         throw new Error('Wrong credentials given');
       }
     } catch (err: any) {
-      throw new HttpException(400, err);
+      throw new HttpException(400, err.message);
     }
   }
 }

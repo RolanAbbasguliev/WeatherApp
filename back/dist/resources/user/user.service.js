@@ -34,7 +34,7 @@ class UserService {
                 return yield bcrypt_1.default.compare(password, user.password);
             }
             catch (err) {
-                console.log(err);
+                throw new http_exception_1.default(400, err);
             }
         });
     }
@@ -50,8 +50,10 @@ class UserService {
                         name: name,
                         email: email,
                         password: userPassword,
+                        role: role,
                     },
                 });
+                console.log('4444');
                 if (!user) {
                     throw new Error('Unable to create user');
                 }
@@ -86,7 +88,7 @@ class UserService {
                 }
             }
             catch (err) {
-                throw new http_exception_1.default(400, err);
+                throw new http_exception_1.default(400, err.message);
             }
         });
     }

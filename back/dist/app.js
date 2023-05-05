@@ -9,9 +9,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const helmet_1 = __importDefault(require("helmet"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const morgan_1 = __importDefault(require("morgan"));
-mongoose_1.default.set('strictQuery', false);
 class App {
     constructor(controllers, port) {
         this.express = (0, express_1.default)();
