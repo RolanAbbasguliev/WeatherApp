@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const authenticated_middleware_1 = __importDefault(require("@/middleware/authenticated.middleware"));
 const http_exception_1 = __importDefault(require("@/utils/exceptions/http.exception"));
+const axios_1 = __importDefault(require("axios"));
 const express_1 = require("express");
 class WeatherController {
     constructor() {
@@ -22,8 +23,8 @@ class WeatherController {
         this.getWeather = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let weatherCurrent;
-                const response = yield fetch('http://api.weatherapi.com/v1/forecast.json?key=7ddee4b4456940b09e962342232504&q=London&days=5&aqi=no&alerts=no');
-                console.log(response);
+                const response = yield axios_1.default.get('http://api.weatherapi.com/v1/forecast.json?key=7ddee4b4456940b09e962342232504&q=London&days=5&aqi=no&alerts=no');
+                // console.log(await response.json());
                 res.status(201).json({ response });
             }
             catch (err) {

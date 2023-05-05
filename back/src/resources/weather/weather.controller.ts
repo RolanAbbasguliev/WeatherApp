@@ -2,6 +2,7 @@ import authenticatedMiddleware from '@/middleware/authenticated.middleware';
 import { WeatherAPICurrent } from '@/resources/weather/weather.dto';
 import HttpException from '@/utils/exceptions/http.exception';
 import Controller from '@/utils/interfaces/controller.interface';
+import axios from 'axios';
 import { NextFunction, Request, Response, Router } from 'express';
 
 class WeatherController implements Controller {
@@ -24,10 +25,10 @@ class WeatherController implements Controller {
     try {
       let weatherCurrent: WeatherAPICurrent;
 
-      const response = await fetch(
+      const response = await axios.get(
         'http://api.weatherapi.com/v1/forecast.json?key=7ddee4b4456940b09e962342232504&q=London&days=5&aqi=no&alerts=no'
       );
-      console.log(response);
+      // console.log(await response.json());
 
       res.status(201).json({ response });
     } catch (err: any) {
