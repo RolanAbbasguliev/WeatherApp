@@ -39,6 +39,8 @@ async function authenticatedMiddleware(
       return next(new HttpException(401, 'Unauthorised'));
     }
 
+
+    // res.locals.user = user
     req.user = user;
 
     return next();

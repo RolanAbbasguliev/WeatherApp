@@ -1,9 +1,8 @@
 import DBManager from '@/utils/database/database';
 import { Role } from '@prisma/client';
-
+import HttpException from '@/utils/exceptions/http.exception';
 import token from '@/utils/token';
 import bcrypt from 'bcrypt';
-import HttpException from '../../utils/exceptions/http.exception';
 
 class UserService {
   private prisma = DBManager.getPrisma();

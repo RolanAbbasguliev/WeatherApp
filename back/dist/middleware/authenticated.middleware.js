@@ -37,6 +37,7 @@ function authenticatedMiddleware(req, res, next) {
             if (!user) {
                 return next(new http_exception_1.default(401, 'Unauthorised'));
             }
+            // res.locals.user = user
             req.user = user;
             return next();
         }

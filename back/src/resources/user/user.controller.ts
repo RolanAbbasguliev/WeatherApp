@@ -94,17 +94,17 @@ class UserController implements Controller {
     }
   };
 
-  // private getUser = (
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction
-  // ): Response | void => {
-  //   if (!req.user) {
-  //     return next(new HttpException(404, 'No logged in user'));
-  //   }
+  private getUser = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Response | void => {
+    if (!req.user) {
+      return next(new HttpException(404, 'No logged in user'));
+    }
 
-  //   res.status(200).json({ user: req.user });
-  // };
+    res.status(200).json({ user: req.user });
+  };
 }
 
 export default UserController;

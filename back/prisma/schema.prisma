@@ -11,13 +11,22 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String 
-  password String 
-  role Role @default(USER)
-  
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  name     String
+  password String
+  role     Role   @default(USER)
+
+  weather Json[]
 }
+
+// model Weather {
+//   id Int @id @default(autoincrement())
+
+//   user   User @relation(fields: [userId], references: [id])
+//   userId Int
+//   weatherInfo Json
+// }
 
 enum Role {
   USER

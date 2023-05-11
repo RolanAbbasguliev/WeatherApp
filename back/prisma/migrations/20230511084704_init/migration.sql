@@ -8,6 +8,7 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'USER',
+    "weather" JSONB,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

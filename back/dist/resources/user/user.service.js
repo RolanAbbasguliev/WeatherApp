@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("@/utils/database/database"));
+const http_exception_1 = __importDefault(require("@/utils/exceptions/http.exception"));
 const token_1 = __importDefault(require("@/utils/token"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const http_exception_1 = __importDefault(require("../../utils/exceptions/http.exception"));
 class UserService {
     constructor() {
         this.prisma = database_1.default.getPrisma();

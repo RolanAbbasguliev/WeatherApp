@@ -64,6 +64,12 @@ class UserController {
                 next(new http_exception_1.default(400, error));
             }
         });
+        this.getUser = (req, res, next) => {
+            if (!req.user) {
+                return next(new http_exception_1.default(404, 'No logged in user'));
+            }
+            res.status(200).json({ user: req.user });
+        };
         this.initialiseRoutes();
     }
     initialiseRoutes() {

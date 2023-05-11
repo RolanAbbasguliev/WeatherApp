@@ -1,36 +1,42 @@
 import authenticatedMiddleware from '@/middleware/authenticated.middleware';
+import validationMiddleware from '@/middleware/validation.middleware';
 import { WeatherAPICurrent } from '@/resources/weather/weather.dto';
+import WeatherService from '@/resources/weather/weather.service';
+import validate from '@/resources/weather/weather.validation';
 import HttpException from '@/utils/exceptions/http.exception';
 import Controller from '@/utils/interfaces/controller.interface';
-import axios from 'axios';
 import { NextFunction, Request, Response, Router } from 'express';
 
 class WeatherController implements Controller {
   public path = '/weather';
   public router = Router();
+  private weatherService = new WeatherService();
 
   constructor() {
     this.initialiseRoutes();
   }
 
   private initialiseRoutes() {
-    this.router.get(`${this.path}`, authenticatedMiddleware, this.getWeather);
+    this.router.post(
+      `${this.path}`,
+      validationMiddleware(validate.getWeatherCurrentInfo),
+      authenticatedMiddleware,
+      this.getWeatherCurrentInfo
+    );
   }
 
-  private getWeather = async (
+  private getWeatherCurrentInfo = async (
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response | void> => {
     try {
-      let weatherCurrent: WeatherAPICurrent;
+      const { city } = req.body;
 
-      const response = await axios.get(
-        'http://api.weatherapi.com/v1/forecast.json?key=7ddee4b4456940b09e962342232504&q=London&days=5&aqi=no&alerts=no'
-      );
-      // console.log(await response.json());
+      const weatherInfo: WeatherAPICurrent | Error =
+        await this.weatherService.getWeatherCurrentInfo(req.user.id, city);
 
-      res.status(201).json({ response });
+      res.status(201).json({ weatherInfo });
     } catch (err: any) {
       next(new HttpException(400, err));
     }
